@@ -1,0 +1,188 @@
+Serial Protocol (version 1)
+===========================
+
+
+Serial line options
+-------------------
+
+Speed: 115200
+Data bits: 8
+Stop bits: 1
+Parity bit: none
+Flow control: none
+
+
+Packet frame
+------------
+
+All packet frames have same structure:
++--------+--------+------------------------------------+
+| Offset | Length | Description                        |
++--------+--------+------------------------------------+
+| 0      | 1      | Packet start byte = 0xAE           |
++--------+--------+------------------------------------+
+| 1      | 1      | Packet data length (little-endian) |
++--------+--------+------------------------------------+
+| 3      | ...    | Packet data                        |
++--------+--------+------------------------------------+
+| ...    | 2      | CRC-16/MCRF4XX (little-endian)     |
++--------+--------+------------------------------------+
+
+All packets start from 0xAE byte. All other fields in the packets do dot have 0xAE bytes. If the bytes shall to be present then they are encoded by two byte sequences:
++---------------+------------------+
+| Original byte | Encoded sequence |
++---------------+------------------+
+| 0xAD          | 0xAD 0x00        |
++---------------+------------------+
+| 0xAE          | 0xAD 0x01        |
++---------------+------------------+
+
+The data length field does not include the additional encoded sequence length. The data length should not be more than 128.
+
+A dsPIC microprocessor ignores all packets with the wrong format of the packet frame.
+
+
+CRC
+---
+
+Type: CRC-16/MCRF4XX
+Polynomial: 0x1021 (used reversed 0x8408)
+Initial value: 0xFFFF
+RefIn: true
+RefOut: true
+XorOut: none
+Check "123456789": 0x6F91
+
+The CRC is only calculated for the packet data field. The packet start byte and the packet data length are NOT included into the CRC.
+
+
+Communication
+-------------
+
+The communication between a PC and a dsPIC microprocessor is on a request-response basis. The PC sends requests to the dsPIC microprocessor. The dsPIC microprocessor executes the requests and returns results in response packets.
+
+All request-response descriptions do not contain packet frames. They describe only the packet data.
+
+A dsPIC microprocessor ignores all packets with the wrong format.
+
+
+'Start communication' request-response
+--------------------------------------
+
+Request:
++--------+--------+-------------------+
+| Offset | Length | Description       |
++--------+--------+-------------------+
+| 0      | 1      | Request ID = 0x00 |
++--------+--------+-------------------+
+
+Response:
++--------+--------+-----------------------------------------+
+| Offset | Length | Description                             |
++--------+--------+-----------------------------------------+
+| 0      | 1      | Response ID = 0xFF                      |
++--------+--------+-----------------------------------------+
+| 1      | 1      | Serial protocol version = 1             |
++--------+--------+-----------------------------------------+
+| 2      | 8      | Signature "dsPIC30F"                    |
++--------+--------+-----------------------------------------+
+| 10     | 2      | Bootloader size (little-endian)         |
++--------+--------+-----------------------------------------+
+| 12     | 4      | Bootloader base address (little-endian) |
++--------+--------+-----------------------------------------+
+| 16     | ...    | Reserved                                |
++--------+--------+-----------------------------------------+
+
+The 'Bootloader size' and 'Bootloader base address' values must be aligned by the program flash row size (64 = 32 instruction words).
+
+A dsPIC microprocessor ignores all other requests until it receives the 'Start communication' request.
+
+
+'Read flash memory' request-response
+------------------------------------
+
+Request:
++--------+--------+------------------------------------------+
+| Offset | Length | Description                              |
++--------+--------+------------------------------------------+
+| 0      | 1      | Request ID = 0x01                        |
++--------+--------+------------------------------------------+
+| 1      | 1      | TBLPAG (address high part)               |
++--------+--------+------------------------------------------+
+| 2      | 2      | Offset (little-endian, address low part) |
++--------+--------+------------------------------------------+
+
+The 'Offset' value must be aligned by 2.
+
+Response:
++--------+--------+------------------------------------------+
+| Offset | Length | Description                              |
++--------+--------+------------------------------------------+
+| 0      | 1      | Response ID = 0xFF - <Request ID> = 0xFE |
++--------+--------+------------------------------------------+
+| 1      | 96     | Data from flash memory (little-endian,   |
+|        |        | three bytes for one instruction word)    |
++--------+--------+------------------------------------------+
+
+
+'Start firmware' request
+------------------------
+
+Request:
++--------+--------+-------------------+
+| Offset | Length | Description       |
++--------+--------+-------------------+
+| 0      | 1      | Request ID = 0x03 |
++--------+--------+-------------------+
+
+Response:
++--------+--------+------------------------------------------+
+| Offset | Length | Description                              |
++--------+--------+------------------------------------------+
+| 0      | 1      | Response ID = 0xFF - <Request ID> = 0xFC |
++--------+--------+------------------------------------------+
+
+The request is sent to the device after successful programming to start the target firmware.
+
+
+'Modify Flash Memory' request-response
+--------------------------------------
+
+Request:
++--------+--------+------------------------------------------+
+| Offset | Length | Description                              |
++--------+--------+------------------------------------------+
+| 0      | 1      | Request ID:                              |
+|        |        | bit 0 - 0 optimized operation            |
+|        |        |         1 force operation                |
+|        |        | bit 1 - 0 erase only                     |
+|        |        |         1 program                        |
+|        |        | bit 2 - 1 program memory region          |
+|        |        | bit 3 - 1 data EEPROM region             |
+|        |        | bits 4...7 = 0                           |
++--------+--------+------------------------------------------+
+| 1      | 1      | TBLPAG (address high part)               |
++--------+--------+------------------------------------------+
+| 2      | 2      | Offset (little-endian, address low part) |
++--------+--------+------------------------------------------+
+| 4      | 96/32  | Data for writing (little-endian, three   |
+|        |        | bytes for one instruction word or two    |
+|        |        | bytes for one data word, optional)       |
++--------+--------+------------------------------------------+
+
+Response:
++--------+--------+------------------------------------+
+| Offset | Length | Description                        |
++--------+--------+------------------------------------+
+| 0      | 1      | Response ID = 0xFF - <Request ID>  |
++--------+--------+------------------------------------+
+| 1      | 1      | Operation status:                  |
+|        |        | bit 0 - erase done                 |
+|        |        | bit 1 - erase verification error   |
+|        |        | bit 2 - program done               |
+|        |        | bit 3 - program verification error |
++--------+--------+------------------------------------+
+
+The 'Offset' value must be aligned by program memory row (64 = 32 instruction words) for program memory operations and by data EEPROM row (32 = 16 words) for data EEPROM operations.
+
+The 'Data for writing' filed is present for program operations. The field has length 96 bytes for program memory operations and 32 bytes for data EEPROM operations.

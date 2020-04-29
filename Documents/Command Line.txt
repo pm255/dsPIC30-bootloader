@@ -1,0 +1,36 @@
+Command Line
+============
+
+<loader> [-h]
+	-h, --help - show help
+
+<loader> [-i,-t,-m] <serial-port>
+	-i, --info - connect to the device and show bootloader information
+
+<loader> -p [-t,-m,-f,-e,-r] <serial-port> <firmware-file-name>
+	-p, --program - program the firmware into the device with verification
+
+<loader> -v [-t,-m] <serial-port> <firmware-file-name>
+	-v, --verify - verify if the device has the specified firmware
+
+<loader> -l [-t,-m,-a,-s] <serial-port> <firmware-file-name>
+	-l, --load - download the current device firmware to the file
+
+<loader> -e [-t,-m,-f] <serial-port>
+	-e, --erase - erase all device memory excluding the bootloader
+
+Options:
+	-t=<secs>, --timeout=<secs> - connection timeout in seconds (0 - infinite, default: 0)
+	-m=<model>, --model=<model> - check if the device has the specified model (default: no check)
+	-f, --force - force overwrite the memory even if it has same content (default: no)
+	-e, --erase - erase memory areas not specified in the firmware file (default: no)
+	-r, --no-run - do not run the firmware after programing (default: run)
+	-a, -all - include the bootloader into the firmware image (default: no)
+	-s, --no-smart - do not exclude unprogrammed memory areas from the firmware image (default: exclude)
+
+Examples:
+	<loader> COM3 - show bootloader information
+	<loader> -p -e -r COM3 firmware.hex - erase and program the device with the "firmware.hex" file, do not run the firmware
+	<loader> -v COM3 firmware.hex - verify the device firmware
+	<loader> -l -a COM3 firmware.hex - download the device firmware to the "firmware.hex" file with the bootloader
+	<loader> -e COM3 - erase the device memory excluding the bootloader

@@ -1,0 +1,28 @@
+Build Bootloader
+================
+
+The bootloader uses standard Makefile for building. Standard targets "all" and "clean" are supported.
+
+The Microchip XC16 compiler environment shall be accessed by PATH environment variable.
+
+Command line:
+
+	make CPU_MODEL=<cpu-model> CONFIG_FILE=<config-file> [LINKER_SCRIPT=<linker-script>]
+
+<cpu-model> - CPU model name:
+	30F2010, 30F2011, 30F2012,
+	30F3010, 30F3011, 30F3012, 30F3013, 30F3014,
+	30F4011, 30F4012, 30F4013,
+	30F5011, 30F5013, 30F5015, 30F5016,
+	30F6010, 30F6011, 30F6012, 30F6013, 30F6014, 30F6015,
+	30F6010A, 30F6011A, 30F6012A, 30F6013A, 30F6014A
+	
+<config-file> - name of the config C header file. You can just copy the "config-example.h" file and make necessary changes.
+
+<linker-script> - optional parameter if you would like to use your own linker script.
+
+Command line example:
+
+	make CPU_MODEL=30F612A CONFIG_FILE=config.h
+
+The result bootloader image is in "bootloader.hex" file.

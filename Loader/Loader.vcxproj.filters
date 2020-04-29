@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{f31f2266-adcd-4654-ae21-30abbdd07960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Connection">
+      <UniqueIdentifier>{5b794748-b985-43af-aeec-893dd4663686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{e4d6b40f-64d9-4335-b5ee-bdf7513722ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Firmware">
+      <UniqueIdentifier>{8b45a311-5b3d-44ff-88cc-b65ee79a94d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Stable.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorExit.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialPort.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceInfo.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="FirmwareImage.cpp">
+      <Filter>Firmware</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryLayout.cpp">
+      <Filter>Firmware</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandLineParser.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="HexFileWriter.cpp">
+      <Filter>Firmware</Filter>
+    </ClCompile>
+    <ClCompile Include="HexFileLoad.cpp">
+      <Filter>Firmware</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceConnection.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketTransiver.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Stable.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorExit.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialPort.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceInfo.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="FirmwareImage.h">
+      <Filter>Firmware</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLayout.h">
+      <Filter>Firmware</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineParser.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="HexFileWriter.h">
+      <Filter>Firmware</Filter>
+    </ClInclude>
+    <ClInclude Include="HexFileLoad.h">
+      <Filter>Firmware</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceConnection.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketTransiver.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

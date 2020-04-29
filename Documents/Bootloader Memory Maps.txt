@@ -1,0 +1,48 @@
+Bootloader Memory Maps
+======================
+
+
+Program Flash Memory Map
+------------------------
+
+PM_SIZE - size of program flash memory in the target device.
+
++-----------------+-----------------+-------------------------------------------+
+| Address         | Length          | Description                               |
++-----------------+-----------------+-------------------------------------------+
+| 0x000000        | 0x40            | First row (never changed)                 |
++-----------------+-----------------+-------------------------------------------+
+| 0x000040        | PM_SIZE - 0x840 | Target firmware image (without first row) |
++-----------------+-----------------+-------------------------------------------+
+| PM_SIZE - 0x800 | 0x4             | Target firmware reset jump                |
++-----------------+-----------------+-------------------------------------------+
+| PM_SIZE - 0x7FC | 0x4             | Reserved                                  |
++-----------------+-----------------+-------------------------------------------+
+| PM_SIZE - 0x7F8 | 0x78            | Jumps table (first row emulation)         |
++-----------------+-----------------+-------------------------------------------+
+| PM_SIZE - 0x780 | 0x780           | Bootloader firmware image                 |
++-----------------+-----------------+-------------------------------------------+
+
+The first row is a part of bootloader firmware. It is never changed. The reset jump of the target firmware is coped to the 'Target firmware reset jump' field. The all interrupt vectors in the first row point to the 'Jump table'. The jump table is created by PC software from the target firmware image.
+
+The program flash memory map can be changed in the corresponding linker script file (.gld).
+
+
+RAM Map
+-------
+
++-----------------+-----------------+-------------------------------------------+
+| Address         | Length          | Description                               |
++-----------------+-----------------+-------------------------------------------+
+| 0x0000          | 0x800           | SFR                                       |
++-----------------+-----------------+-------------------------------------------+
+| 0x0800          | 0x100           | Bootloader data and stack                 |
++-----------------+-----------------+-------------------------------------------+
+| 0x0900          | .....           | Not used by bootloader                    |
++-----------------+-----------------+-------------------------------------------+
+
+Area from 0x800 to 0x0900 can be changed after reset by bootloader firmware.
+
+Area from 0x0900 can be used for persistent variables in the target firmware. The area is not changed by bootloader firmware.
+
+The RAM memory map can be changed in the corresponding linker script file (.gld).
