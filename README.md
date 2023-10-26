@@ -102,7 +102,7 @@ starts the target firmware.
 
 Build your bootloader firmware, for example:
 
-	make CPU_MODEL=30P6012A CONFIG_FILE=config-my-project.has
+	make CPU_MODEL=30P6012A CONFIG_FILE=config-my-project.h
 
 Where:
 	CPU_MODEL - microprocessor model in your project
